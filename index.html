@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TLOTLEGO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF6EF;
+    --blush:#FFD9E4;
+    --peach:#FFCBAA;
+    --rose:#E8748F;
+    --rose-deep:#C85374;
+    --plum:#5B3A4A;
+    --plum-soft:#8A6373;
+    --bear:#C89B7B;
+    --bear-dark:#8B5E3C;
+    --white:#FFFFFF;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+  html,body{
+    height:100%;
+    overflow:hidden;
+    font-family:'Quicksand',sans-serif;
+    background:linear-gradient(180deg,var(--cream) 0%,var(--blush) 100%);
+  }
+
+  .stage{
+    position:relative;
+    width:100%;
+    height:100vh;
+    height:100dvh;
+    overflow:hidden;
+  }
+
+  .screen{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:32px 24px;
+    text-align:center;
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(16px);
+    transition:opacity .6s ease, transform .6s ease, visibility 0s linear .6s;
+  }
+
+  .screen.active{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+    transition:opacity .6s ease, transform .6s ease, visibility 0s linear 0s;
+  }
+
+  /* ---------- floating hearts ambience ---------- */
+  .floaters{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+  }
+  .floaters span{
+    position:absolute;
+    bottom:-40px;
+    font-size:18px;
+    opacity:.55;
+    animation:floatUp linear infinite;
+    color:var(--rose);
+  }
+  @keyframes floatUp{
+    0%{transform:translateY(0) translateX(0) rotate(0deg);opacity:0;}
+    10%{opacity:.6;}
+    90%{opacity:.5;}
+    100%{transform:translateY(-115vh) translateX(var(--drift,20px)) rotate(30deg);opacity:0;}
+  }
+
+  .content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;max-width:420px;}
+
+  /* ---------- Screen 1 ---------- */
+  .bear-wrap{
+    width:220px;
+    height:220px;
+    margin-bottom:18px;
+    filter:drop-shadow(0 10px 18px rgba(139,94,60,.25));
+    animation:bob 3.2s ease-in-out infinite;
+  }
+  @keyframes bob{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+  }
+
+  h1.title{
+    font-family:'Fredoka',sans-serif;
+    font-weight:600;
+    font-size:2.4rem;
+    color:var(--rose-deep);
+    letter-spacing:.5px;
+    margin-bottom:6px;
+  }
+  .subtitle{
+    font-size:1rem;
+    color:var(--plum-soft);
+    margin-bottom:30px;
+  }
+
+  button.cta{
+    font-family:'Fredoka',sans-serif;
+    font-size:1.05rem;
+    font-weight:500;
+    color:var(--white);
+    background:linear-gradient(135deg,var(--rose) 0%,var(--rose-deep) 100%);
+    border:none;
+    padding:15px 42px;
+    border-radius:999px;
+    box-shadow:0 8px 20px rgba(200,83,116,.35);
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  button.cta:active{
+    transform:scale(.95);
+    box-shadow:0 4px 10px rgba(200,83,116,.3);
+  }
+
+  /* ---------- Screen 2 ---------- */
+  .letter-card{
+    background:var(--white);
+    border-radius:26px;
+    padding:34px 26px;
+    box-shadow:0 14px 30px rgba(139,94,60,.18);
+    position:relative;
+    border:2px solid var(--blush);
+  }
+  .letter-card::before{
+    content:"💌";
+    position:absolute;
+    top:-26px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:2.2rem;
+    background:var(--cream);
+    border-radius:50%;
+    width:52px;height:52px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 14px rgba(139,94,60,.2);
+  }
+  .letter-heading{
+    font-family:'Fredoka',sans-serif;
+    font-size:1.3rem;
+    color:var(--rose-deep);
+    margin:14px 0 14px;
+    font-weight:600;
+  }
+  .letter-text{
+    font-size:1.08rem;
+    line-height:1.65;
+    color:var(--plum);
+    font-weight:500;
+  }
+  .signature{
+    margin-top:18px;
+    font-family:'Fredoka',sans-serif;
+    color:var(--rose);
+    font-size:1.05rem;
+    font-weight:600;
+  }
+
+  button.cta.secondary{margin-top:28px;}
+
+  /* ---------- Screen 3 ---------- */
+  .wreath-wrap{
+    position:relative;
+    width:280px;
+    height:280px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:8px;
+  }
+  .wreath-wrap svg{width:100%;height:100%;}
+
+  .center-msg{
+    position:absolute;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    width:150px;
+  }
+  .center-msg .well{
+    font-family:'Fredoka',sans-serif;
+    font-size:1.32rem;
+    font-weight:600;
+    color:var(--rose-deep);
+    line-height:1.25;
+  }
+  .center-msg .recovery{
+    margin-top:6px;
+    font-size:.85rem;
+    color:var(--plum-soft);
+    font-weight:600;
+  }
+
+  .footnote{
+    margin-top:22px;
+    font-size:.95rem;
+    color:var(--plum-soft);
+    font-weight:600;
+  }
+  .footnote span{color:var(--rose-deep);}
+
+  @keyframes spinSlow{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+  }
+  .ring{
+    transform-origin:140px 140px;
+    animation:spinSlow 40s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .bear-wrap,.ring,.floaters span{animation:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <div class="floaters" id="floaters"></div>
+
+  <!-- SCREEN 1 -->
+  <section class="screen active" id="screen1">
+    <div class="content">
+      <div class="bear-wrap">
+        <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- ears -->
+          <circle cx="55" cy="52" r="28" fill="#C89B7B"/>
+          <circle cx="165" cy="52" r="28" fill="#C89B7B"/>
+          <circle cx="55" cy="52" r="14" fill="#F3D9C4"/>
+          <circle cx="165" cy="52" r="14" fill="#F3D9C4"/>
+          <!-- face -->
+          <circle cx="110" cy="118" r="82" fill="#DDB08C"/>
+          <!-- blush -->
+          <ellipse cx="72" cy="132" rx="16" ry="10" fill="#F5A6B3" opacity="0.8"/>
+          <ellipse cx="148" cy="132" rx="16" ry="10" fill="#F5A6B3" opacity="0.8"/>
+          <!-- eyes (happy closed) -->
+          <path d="M78 108 Q88 98 98 108" stroke="#5B3A4A" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M122 108 Q132 98 142 108" stroke="#5B3A4A" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <!-- snout -->
+          <ellipse cx="110" cy="140" rx="34" ry="26" fill="#F3D9C4"/>
+          <ellipse cx="110" cy="128" rx="10" ry="7" fill="#5B3A4A"/>
+          <path d="M110 134 Q110 144 100 148" stroke="#5B3A4A" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M110 144 Q120 148 128 144" stroke="#5B3A4A" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <!-- paws covering cheeks -->
+          <ellipse cx="46" cy="140" rx="26" ry="30" fill="#C89B7B"/>
+          <ellipse cx="174" cy="140" rx="26" ry="30" fill="#C89B7B"/>
+          <ellipse cx="46" cy="150" rx="15" ry="17" fill="#F3D9C4"/>
+          <ellipse cx="174" cy="150" rx="15" ry="17" fill="#F3D9C4"/>
+          <!-- little hearts near paws -->
+          <text x="18" y="100" font-size="20">💗</text>
+          <text x="182" y="100" font-size="20">💗</text>
+        </svg>
+      </div>
+      <h1 class="title">Hey Babe</h1>
+      <p class="subtitle">someone has a little something for you...</p>
+      <button class="cta" onclick="goTo(2)">click me</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 2 -->
+  <section class="screen" id="screen2">
+    <div class="content">
+      <div class="letter-card">
+        <div class="letter-heading">a little note for you</div>
+        <p class="letter-text">
+          Hey babe, it's Ozias. I wanted to tell you please get well.
+          I'm always here for you if you need anything, okay?
+        </p>
+        <div class="signature">I love you 💗</div>
+      </div>
+      <button class="cta secondary" onclick="goTo(3)">click me</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 3 -->
+  <section class="screen" id="screen3">
+    <div class="content">
+      <div class="wreath-wrap">
+        <svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+          <g class="ring">
+            <!-- flowers spaced around a circle, radius 110 centered at 140,140 -->
+            <g transform="translate(140,30)"><text x="-14" y="8" font-size="30">🌸</text></g>
+            <g transform="translate(217,63)"><text x="-14" y="8" font-size="26">🌷</text></g>
+            <g transform="translate(250,140)"><text x="-14" y="8" font-size="30">🌼</text></g>
+            <g transform="translate(217,217)"><text x="-14" y="8" font-size="26">🌺</text></g>
+            <g transform="translate(140,250)"><text x="-14" y="8" font-size="30">🌸</text></g>
+            <g transform="translate(63,217)"><text x="-14" y="8" font-size="26">🌷</text></g>
+            <g transform="translate(30,140)"><text x="-14" y="8" font-size="30">🌼</text></g>
+            <g transform="translate(63,63)"><text x="-14" y="8" font-size="26">🌺</text></g>
+            <g transform="translate(178,45)"><text x="-10" y="8" font-size="18">🍃</text></g>
+            <g transform="translate(235,100)"><text x="-10" y="8" font-size="18">🍃</text></g>
+            <g transform="translate(235,180)"><text x="-10" y="8" font-size="18">🍃</text></g>
+            <g transform="translate(178,235)"><text x="-10" y="8" font-size="18">🍃</text></g>
+            <g transform="translate(102,235)"><text x="-10" y="8" font-size="18">🍃</text></g>
+            <g transform="translate(45,180)"><text x="-10" y="8" font-size="18">🍃</text></g>
+            <g transform="translate(45,100)"><text x="-10" y="8" font-size="18">🍃</text></g>
+            <g transform="translate(102,45)"><text x="-10" y="8" font-size="18">🍃</text></g>
+          </g>
+        </svg>
+        <div class="center-msg">
+          <div class="well">Get Well Soon 🌷</div>
+          <div class="recovery">wishing you a steady recovery</div>
+        </div>
+      </div>
+      <p class="footnote">sending you all my love, <span>every single day</span> 💗</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  function goTo(n){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen' + n).classList.add('active');
+  }
+
+  // ambient floating hearts
+  const emojis = ['💗','💕','🌸','✨'];
+  const container = document.getElementById('floaters');
+  for(let i=0;i<14;i++){
+    const el = document.createElement('span');
+    el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.left = Math.random()*100 + '%';
+    el.style.fontSize = (14 + Math.random()*14) + 'px';
+    el.style.setProperty('--drift', (Math.random()*60 - 30) + 'px');
+    el.style.animationDuration = (8 + Math.random()*10) + 's';
+    el.style.animationDelay = (Math.random()*10) + 's';
+    container.appendChild(el);
+  }
+</script>
+
+</body>
+</html>
